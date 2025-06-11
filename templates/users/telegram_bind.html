@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Привязка Telegram{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body text-center">
+          <h4 class="card-title mb-4">Привязка Telegram</h4>
+          {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+          {% elif success %}
+            <div class="alert alert-success">
+              Telegram успешно привязан!<br>
+              Теперь вернитесь к форме регистрации.
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

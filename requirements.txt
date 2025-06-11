@@ -1,0 +1,9 @@
+Django>=4.0  # или актуальная версия Django
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+bcrypt
+pyotp
+psycopg2-binary
+django-oauth-toolkit
+django-cors-headers

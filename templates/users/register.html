@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-lg rounded-3">
+      <div class="card-body">
+        <h3 class="card-title text-center mb-4">Регистрация</h3>
+
+        <!-- Регистрационная форма -->
+        <form method="post" action="{% url 'register' %}" novalidate>
+          {% csrf_token %}
+
+          <input type="text" name="username" placeholder="Имя пользователя"
+                 value="{{ form_data.username|default:'' }}" class="form-control mb-3">
+
+          <div class="input-group mb-3">
+            <input id="password" type="password" name="password" placeholder="Пароль"
+                   value="{{ form_data.password|default:'' }}" class="form-control">
+            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password')">👁️</button>
+          </div>
+
+          <div class="input-group mb-3">
+            <input id="password2" type="password" name="password2" placeholder="Подтверждение пароля"
+                   value="{{ form_data.password2|default:'' }}" class="form-control">
+            <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password2')">👁️</button>
+          </div>
+
+          <div class="form-check mb-3">
+            <input type="checkbox" name="use_2fa" id="use_2fa" class="form-check-input"
+                   {% if form_data.use_2fa %}checked{% endif %}>
+            <label for="use_2fa" class="form-check-label">Использовать 2FA</label>
+          </div>
+
+          {% if errors %}
+            <div class="alert alert-danger">
+              <ul class="mb-0">
+                {% for field, field_errors in errors.items %}
+                  {% for error in field_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+        </form>
+
+        <!-- Блок Telegram -->
+        <div class="text-center mt-4">
+          {% if form_data.telegram_linked %}
+            <div class="alert alert-success">✅ Telegram привязан</div>
+            <form method="post" action="{% url 'unlink-telegram' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger">Отвязать Telegram</button>
+            </form>
+          {% else %}
+            <form method="get" action="https://t.me/{{ telegram_bot }}">
+              <input type="hidden" name="start" value="bind">
+              <button type="submit" class="btn btn-outline-primary">Привязать Telegram</button>
+              {% if error %}
+        <div class="alert alert-danger mt-3">
+          {{ error }}
+        </div>
+      {% endif %}
+            </form>
+          {% endif %}
+        </div>
+
+        <p class="text-center mt-3">
+          Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePassword(fieldId) {
+  const input = document.getElementById(fieldId);
+  input.type = input.type === "password" ? "text" : "password";
+}
+</script>
+{% endblock %}
